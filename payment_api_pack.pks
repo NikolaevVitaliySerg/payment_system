@@ -1,16 +1,16 @@
 create or replace package payment_api_pack is
     /*
-    Автор: Николаев В.С.
-    Описание: API для сущностей "Платеж"
+    РђРІС‚РѕСЂ: РќРёРєРѕР»Р°РµРІ Р’.РЎ.
+    РћРїРёСЃР°РЅРёРµ: API РґР»СЏ СЃСѓС‰РЅРѕСЃС‚РµР№ "РџР»Р°С‚РµР¶"
     */
     
-    -- Статусы платежа
+    -- РЎС‚Р°С‚СѓСЃС‹ РїР»Р°С‚РµР¶Р°
     c_payment_created constant payment.status%type := 0;
     c_payment_posting constant payment.status%type := 1;
     c_error_posting_payment constant payment.status%type := 2;
     c_payment_cancel constant payment.status%type := 3;
     
-    -- Создание платежа
+    -- РЎРѕР·РґР°РЅРёРµ РїР»Р°С‚РµР¶Р°
     function create_payment (p_payment_detail t_payment_detail_array
                             ,p_summa payment.summa%type
                             ,p_currency_id payment.currency_id%type
@@ -19,24 +19,24 @@ create or replace package payment_api_pack is
                             ,p_create_dtime payment.create_dtime%type default systimestamp)
     return payment.payment_id%type;
     
-    -- Сброс платежа
+    -- РЎР±СЂРѕСЃ РїР»Р°С‚РµР¶Р°
     procedure fail_payment (p_payment_id payment.payment_id%type
                            ,p_reason payment.status_change_reason%type);
     
-    -- Отмена платежа
+    -- РћС‚РјРµРЅР° РїР»Р°С‚РµР¶Р°
     procedure cancel_payment (p_payment_id payment.payment_id%type
                              ,p_reason payment.status_change_reason%type);
     
-    -- Успешное завершение платежа
+    -- РЈСЃРїРµС€РЅРѕРµ Р·Р°РІРµСЂС€РµРЅРёРµ РїР»Р°С‚РµР¶Р°
     procedure successful_finish_payment (p_payment_id payment.payment_id%type);
     
-    -- Блокировка платежа для изменений
+    -- Р‘Р»РѕРєРёСЂРѕРІРєР° РїР»Р°С‚РµР¶Р° РґР»СЏ РёР·РјРµРЅРµРЅРёР№
     procedure try_lock_payment(p_payment_id payment.payment_id%type);
       
-     -- Выполняются ли изменения через API
+     -- Р’С‹РїРѕР»РЅСЏСЋС‚СЃСЏ Р»Рё РёР·РјРµРЅРµРЅРёСЏ С‡РµСЂРµР· API
      procedure is_changes_through_api;
 
-      -- Проверка, на возможность удалять данные
+      -- РџСЂРѕРІРµСЂРєР°, РЅР° РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ СѓРґР°Р»СЏС‚СЊ РґР°РЅРЅС‹Рµ
       procedure check_payment_delete_restriction;
       
 end;
