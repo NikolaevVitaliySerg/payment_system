@@ -1,6 +1,6 @@
 create or replace package body payment_detail_api_pack is   
 
-     g_is_api boolean := false; -- признак выполнЯетсЯ ли изменениЯ через API
+     g_is_api boolean := false; -- РїСЂРёР·РЅР°Рє РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ Р»Рё РёР·РјРµРЅРµРЅРёСЏ С‡РµСЂРµР· API
 
       procedure allow_changes is
       begin
@@ -12,7 +12,7 @@ create or replace package body payment_detail_api_pack is
         g_is_api := false;
       end;
       
-    -- „обавление/обновление данных платежа 
+    -- Р”РѕР±Р°РІР»РµРЅРёРµ/РѕР±РЅРѕРІР»РµРЅРёРµ РґР°РЅРЅС‹С… РїР»Р°С‚РµР¶Р° 
     procedure insert_or_update_payment_detail (p_payment_id payment.payment_id%type
                                               ,p_payment_detail t_payment_detail_array)
     is 
@@ -25,7 +25,7 @@ create or replace package body payment_detail_api_pack is
         
         allow_changes();
         
-        -- „обавление/обновление данных платежа
+        -- Р”РѕР±Р°РІР»РµРЅРёРµ/РѕР±РЅРѕРІР»РµРЅРёРµ РґР°РЅРЅС‹С… РїР»Р°С‚РµР¶Р°
         merge into payment_detail pd 
         using (select p_payment_id payment_id 
                       ,value(t).field_id field_id
@@ -46,7 +46,7 @@ create or replace package body payment_detail_api_pack is
           raise;
     end;
     
-    -- “даление деталей платежа
+    -- РЈРґР°Р»РµРЅРёРµ РґРµС‚Р°Р»РµР№ РїР»Р°С‚РµР¶Р°
     procedure delete_payment_detail (p_payment_id payment.payment_id%type
                                     ,p_delete_payment_detail t_number_array)
     is
@@ -67,7 +67,7 @@ create or replace package body payment_detail_api_pack is
         
         allow_changes();
         
-        -- “даление деталей платежа
+        -- РЈРґР°Р»РµРЅРёРµ РґРµС‚Р°Р»РµР№ РїР»Р°С‚РµР¶Р°
         delete payment_detail pd
             where pd.payment_id = p_payment_id
                and pd.field_id in (select value(t) from table(p_delete_payment_detail) t);
