@@ -1,4 +1,4 @@
--- удаление сущностей, если выполняете первый раз, будут ошибки удаления, т.к. объектов еще нет
+-- СѓРґР°Р»РµРЅРёРµ СЃСѓС‰РЅРѕСЃС‚РµР№, РµСЃР»Рё РІС‹РїРѕР»РЅСЏРµС‚Рµ РїРµСЂРІС‹Р№ СЂР°Р·, Р±СѓРґСѓС‚ РѕС€РёР±РєРё СѓРґР°Р»РµРЅРёСЏ, С‚.Рє. РѕР±СЉРµРєС‚РѕРІ РµС‰Рµ РЅРµС‚
 drop table client_data;
 drop table client_data_field;
 
@@ -12,7 +12,7 @@ drop table currency;
 drop sequence client_seq;
 drop sequence payment_seq;
 
--------- Создание сущности "Клиент"
+-------- РЎРѕР·РґР°РЅРёРµ СЃСѓС‰РЅРѕСЃС‚Рё "РљР»РёРµРЅС‚"
 create table client
 (
   client_id           number(30) not null,
@@ -23,13 +23,13 @@ create table client
   update_dtime_tech   timestamp(6) default systimestamp not null
 );
 
-comment on table client is 'Клиент';
-comment on column client.client_id is 'Уникальный ID клиента';
-comment on column client.is_active is 'Активен ли клиент. 1 - да, 0 - нет.';
-comment on column client.is_blocked is 'Заблокирован ли клиент. 1 - да, 0 - нет.';
-comment on column client.blocked_reason is 'Причина блокировки';
-comment on column client.create_dtime_tech is 'Техническое поле. Дата создания записи';
-comment on column client.update_dtime_tech is 'Техническое поле. Дата обновления записи';
+comment on table client is 'РљР»РёРµРЅС‚';
+comment on column client.client_id is 'РЈРЅРёРєР°Р»СЊРЅС‹Р№ ID РєР»РёРµРЅС‚Р°';
+comment on column client.is_active is 'РђРєС‚РёРІРµРЅ Р»Рё РєР»РёРµРЅС‚. 1 - РґР°, 0 - РЅРµС‚.';
+comment on column client.is_blocked is 'Р—Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ Р»Рё РєР»РёРµРЅС‚. 1 - РґР°, 0 - РЅРµС‚.';
+comment on column client.blocked_reason is 'РџСЂРёС‡РёРЅР° Р±Р»РѕРєРёСЂРѕРІРєРё';
+comment on column client.create_dtime_tech is 'РўРµС…РЅРёС‡РµСЃРєРѕРµ РїРѕР»Рµ. Р”Р°С‚Р° СЃРѕР·РґР°РЅРёСЏ Р·Р°РїРёСЃРё';
+comment on column client.update_dtime_tech is 'РўРµС…РЅРёС‡РµСЃРєРѕРµ РїРѕР»Рµ. Р”Р°С‚Р° РѕР±РЅРѕРІР»РµРЅРёСЏ Р·Р°РїРёСЃРё';
 
 alter table client add constraint client_pk primary key (client_id);
 
@@ -38,7 +38,7 @@ alter table client add constraint client_blocked_chk check (is_blocked in (0, 1)
 alter table client add constraint client_block_reason_chk check ((is_blocked = 1 and blocked_reason is not null) or (is_blocked = 0));
 alter table client add constraint client_tech_dates_chk check (create_dtime_tech <= update_dtime_tech);
 
--------- Создание сущности "Справочник полей данных клиента"
+-------- РЎРѕР·РґР°РЅРёРµ СЃСѓС‰РЅРѕСЃС‚Рё "РЎРїСЂР°РІРѕС‡РЅРёРє РїРѕР»РµР№ РґР°РЅРЅС‹С… РєР»РёРµРЅС‚Р°"
 create table client_data_field
 (
   field_id    number(10) not null,
@@ -46,22 +46,22 @@ create table client_data_field
   description varchar2(200 char) not null
 );
 
-comment on table client_data_field is 'Справочник полей данных клиента';
-comment on column client_data_field.field_id is 'Уникальный ID поля';
-comment on column client_data_field.name is 'Название - код';
-comment on column client_data_field.description is 'Описание';
+comment on table client_data_field is 'РЎРїСЂР°РІРѕС‡РЅРёРє РїРѕР»РµР№ РґР°РЅРЅС‹С… РєР»РёРµРЅС‚Р°';
+comment on column client_data_field.field_id is 'РЈРЅРёРєР°Р»СЊРЅС‹Р№ ID РїРѕР»СЏ';
+comment on column client_data_field.name is 'РќР°Р·РІР°РЅРёРµ - РєРѕРґ';
+comment on column client_data_field.description is 'РћРїРёСЃР°РЅРёРµ';
 
 alter table client_data_field add constraint client_data_field_pk primary key (field_id);
 alter table client_data_field add constraint client_data_field_name_chk check (name = upper(name));
 
--- поля
-insert into client_data_field values (1, 'EMAIL', 'E-mail пользователя');
-insert into client_data_field values (2, 'MOBILE_PHONE', 'Номер мобильного телефона');
-insert into client_data_field values (3, 'INN', 'ИНН');
-insert into client_data_field values (4, 'BIRTHDAY', 'Дата рождения');
+-- РїРѕР»СЏ
+insert into client_data_field values (1, 'EMAIL', 'E-mail РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ');
+insert into client_data_field values (2, 'MOBILE_PHONE', 'РќРѕРјРµСЂ РјРѕР±РёР»СЊРЅРѕРіРѕ С‚РµР»РµС„РѕРЅР°');
+insert into client_data_field values (3, 'INN', 'РРќРќ');
+insert into client_data_field values (4, 'BIRTHDAY', 'Р”Р°С‚Р° СЂРѕР¶РґРµРЅРёСЏ');
 commit;
 
--------- Создание сущности "Данные клиента"
+-------- РЎРѕР·РґР°РЅРёРµ СЃСѓС‰РЅРѕСЃС‚Рё "Р”Р°РЅРЅС‹Рµ РєР»РёРµРЅС‚Р°"
 create table client_data
 (
   client_id   number(30) not null,
@@ -69,10 +69,10 @@ create table client_data
   field_value varchar2(200 char) not null
 );
 
-comment on table client_data is 'Данные клиента';
-comment on column client_data.client_id is 'ID клиента';
-comment on column client_data.field_id is 'ID поля';
-comment on column client_data.field_value is 'Значение поля (сами данные)';
+comment on table client_data is 'Р”Р°РЅРЅС‹Рµ РєР»РёРµРЅС‚Р°';
+comment on column client_data.client_id is 'ID РєР»РёРµРЅС‚Р°';
+comment on column client_data.field_id is 'ID РїРѕР»СЏ';
+comment on column client_data.field_value is 'Р—РЅР°С‡РµРЅРёРµ РїРѕР»СЏ (СЃР°РјРё РґР°РЅРЅС‹Рµ)';
 
 alter table client_data add constraint client_data_pk primary key (client_id, field_id);
 alter table client_data add constraint client_data_client_fk foreign key (client_id) references client (client_id);
@@ -82,27 +82,27 @@ create index client_data_field_i on client_data(field_id);
 
 ---------------------------------------------------------------------------------------------------------------
 
--------- Создание справочника "Валюты"
+-------- РЎРѕР·РґР°РЅРёРµ СЃРїСЂР°РІРѕС‡РЅРёРєР° "Р’Р°Р»СЋС‚С‹"
 create table currency
 (
   currency_id number(3) not null,
   alfa3       char(3 char) not null,
   description varchar2(100 char) not null
 );
-comment on table currency is 'Справочник валют (ISO-4217)';
-comment on column currency.currency_id is 'Трёхзначный цифровой (number-3) код валюты';
-comment on column currency.alfa3 is 'Трёхбуквенный алфавитный (alfa-3) код валюты';
-comment on column currency.description is 'Описание валюты';
+comment on table currency is 'РЎРїСЂР°РІРѕС‡РЅРёРє РІР°Р»СЋС‚ (ISO-4217)';
+comment on column currency.currency_id is 'РўСЂС‘С…Р·РЅР°С‡РЅС‹Р№ С†РёС„СЂРѕРІРѕР№ (number-3) РєРѕРґ РІР°Р»СЋС‚С‹';
+comment on column currency.alfa3 is 'РўСЂС‘С…Р±СѓРєРІРµРЅРЅС‹Р№ Р°Р»С„Р°РІРёС‚РЅС‹Р№ (alfa-3) РєРѕРґ РІР°Р»СЋС‚С‹';
+comment on column currency.description is 'РћРїРёСЃР°РЅРёРµ РІР°Р»СЋС‚С‹';
 
 alter table currency add constraint currency_pk primary key (currency_id);
 alter table currency add constraint currency_alfa3_chk check (alfa3 = upper(alfa3));
 
-insert into currency values(643, 'RUB', 'Российский рубль');
-insert into currency values(840, 'USD', 'Доллар США');
-insert into currency values(978 , 'EUR', 'Евро');
+insert into currency values(643, 'RUB', 'Р РѕСЃСЃРёР№СЃРєРёР№ СЂСѓР±Р»СЊ');
+insert into currency values(840, 'USD', 'Р”РѕР»Р»Р°СЂ РЎРЁРђ');
+insert into currency values(978 , 'EUR', 'Р•РІСЂРѕ');
 commit;
 
--------- Создание сущности "Платеж"
+-------- РЎРѕР·РґР°РЅРёРµ СЃСѓС‰РЅРѕСЃС‚Рё "РџР»Р°С‚РµР¶"
 create table payment
 (
   payment_id           number(38) not null,
@@ -116,17 +116,17 @@ create table payment
   create_dtime_tech    timestamp(6) default systimestamp not null,
   update_dtime_tech    timestamp(6) default systimestamp not null
 );
-comment on table payment is 'Платеж';
-comment on column payment.payment_id is 'Уникальный ID платежа';
-comment on column payment.create_dtime is 'Дата создания платежа';
-comment on column payment.summa is 'Сумма платежа';
-comment on column payment.currency_id is 'В какой валюте производился платеж';
-comment on column payment.from_client_id is 'Клиент-отправитель';
-comment on column payment.to_client_id is 'Клиент-получатель';
-comment on column payment.status is 'Статус платежа. 0 - создан, 1 - проведен, 2 - ошибка проведения, 3 - отмена платежа';
-comment on column payment.status_change_reason is 'Причина изменения стуса платежа. Заполняется для статусов "2" и "3"';
-comment on column payment.create_dtime_tech is 'Техническое поле. Дата создания записи';
-comment on column payment.update_dtime_tech is 'Техническое поле. Дата обновления записи';
+comment on table payment is 'РџР»Р°С‚РµР¶';
+comment on column payment.payment_id is 'РЈРЅРёРєР°Р»СЊРЅС‹Р№ ID РїР»Р°С‚РµР¶Р°';
+comment on column payment.create_dtime is 'Р”Р°С‚Р° СЃРѕР·РґР°РЅРёСЏ РїР»Р°С‚РµР¶Р°';
+comment on column payment.summa is 'РЎСѓРјРјР° РїР»Р°С‚РµР¶Р°';
+comment on column payment.currency_id is 'Р’ РєР°РєРѕР№ РІР°Р»СЋС‚Рµ РїСЂРѕРёР·РІРѕРґРёР»СЃСЏ РїР»Р°С‚РµР¶';
+comment on column payment.from_client_id is 'РљР»РёРµРЅС‚-РѕС‚РїСЂР°РІРёС‚РµР»СЊ';
+comment on column payment.to_client_id is 'РљР»РёРµРЅС‚-РїРѕР»СѓС‡Р°С‚РµР»СЊ';
+comment on column payment.status is 'РЎС‚Р°С‚СѓСЃ РїР»Р°С‚РµР¶Р°. 0 - СЃРѕР·РґР°РЅ, 1 - РїСЂРѕРІРµРґРµРЅ, 2 - РѕС€РёР±РєР° РїСЂРѕРІРµРґРµРЅРёСЏ, 3 - РѕС‚РјРµРЅР° РїР»Р°С‚РµР¶Р°';
+comment on column payment.status_change_reason is 'РџСЂРёС‡РёРЅР° РёР·РјРµРЅРµРЅРёСЏ СЃС‚СѓСЃР° РїР»Р°С‚РµР¶Р°. Р—Р°РїРѕР»РЅСЏРµС‚СЃСЏ РґР»СЏ СЃС‚Р°С‚СѓСЃРѕРІ "2" Рё "3"';
+comment on column payment.create_dtime_tech is 'РўРµС…РЅРёС‡РµСЃРєРѕРµ РїРѕР»Рµ. Р”Р°С‚Р° СЃРѕР·РґР°РЅРёСЏ Р·Р°РїРёСЃРё';
+comment on column payment.update_dtime_tech is 'РўРµС…РЅРёС‡РµСЃРєРѕРµ РїРѕР»Рµ. Р”Р°С‚Р° РѕР±РЅРѕРІР»РµРЅРёСЏ Р·Р°РїРёСЃРё';
 
 create index payment_from_client_i on payment (from_client_id);
 create index payment_to_client_i on payment (to_client_id);
@@ -142,7 +142,7 @@ alter table payment add constraint payment_tech_dates_chk check (create_dtime_te
 
 
 
--------- Создание сущности "Справочник полей данных платежа"
+-------- РЎРѕР·РґР°РЅРёРµ СЃСѓС‰РЅРѕСЃС‚Рё "РЎРїСЂР°РІРѕС‡РЅРёРє РїРѕР»РµР№ РґР°РЅРЅС‹С… РїР»Р°С‚РµР¶Р°"
 create table payment_detail_field
 (
   field_id    number(10) not null,
@@ -150,23 +150,23 @@ create table payment_detail_field
   description varchar2(200 char) not null
 );
 
-comment on table payment_detail_field is 'Справочник полей данных платежа';
-comment on column payment_detail_field.field_id is 'Уникальный ID поля';
-comment on column payment_detail_field.name is 'Название - код';
-comment on column payment_detail_field.description is 'Описание';
+comment on table payment_detail_field is 'РЎРїСЂР°РІРѕС‡РЅРёРє РїРѕР»РµР№ РґР°РЅРЅС‹С… РїР»Р°С‚РµР¶Р°';
+comment on column payment_detail_field.field_id is 'РЈРЅРёРєР°Р»СЊРЅС‹Р№ ID РїРѕР»СЏ';
+comment on column payment_detail_field.name is 'РќР°Р·РІР°РЅРёРµ - РєРѕРґ';
+comment on column payment_detail_field.description is 'РћРїРёСЃР°РЅРёРµ';
 
 alter table payment_detail_field add constraint payment_detail_field_pk primary key (field_id);
 alter table payment_detail_field add constraint payment_detail_field_name_chk check (name = upper(name));
 
--- поля
-insert into payment_detail_field values (1, 'CLIENT_SOFTWARE', 'Софт, через который совершался платеж');
-insert into payment_detail_field values (2, 'IP', 'IP адрес плательщика');
-insert into payment_detail_field values (3, 'NOTE', 'Примечание к переводу');
-insert into payment_detail_field values (4, 'IS_CHECKED_FRAUD', 'Проверен ли платеж в системе "АнтиФрод"');
+-- РїРѕР»СЏ
+insert into payment_detail_field values (1, 'CLIENT_SOFTWARE', 'РЎРѕС„С‚, С‡РµСЂРµР· РєРѕС‚РѕСЂС‹Р№ СЃРѕРІРµСЂС€Р°Р»СЃСЏ РїР»Р°С‚РµР¶');
+insert into payment_detail_field values (2, 'IP', 'IP Р°РґСЂРµСЃ РїР»Р°С‚РµР»СЊС‰РёРєР°');
+insert into payment_detail_field values (3, 'NOTE', 'РџСЂРёРјРµС‡Р°РЅРёРµ Рє РїРµСЂРµРІРѕРґСѓ');
+insert into payment_detail_field values (4, 'IS_CHECKED_FRAUD', 'РџСЂРѕРІРµСЂРµРЅ Р»Рё РїР»Р°С‚РµР¶ РІ СЃРёСЃС‚РµРјРµ "РђРЅС‚РёР¤СЂРѕРґ"');
 commit;
 
 
--------- Создание сущности "Детали платежа"
+-------- РЎРѕР·РґР°РЅРёРµ СЃСѓС‰РЅРѕСЃС‚Рё "Р”РµС‚Р°Р»Рё РїР»Р°С‚РµР¶Р°"
 create table payment_detail
 (
   payment_id   number(38) not null,
@@ -174,10 +174,10 @@ create table payment_detail
   field_value  varchar2(200 char) not null
 );
 
-comment on table payment_detail is 'Детали платежа';
-comment on column payment_detail.payment_id is 'ID платежа';
-comment on column payment_detail.field_id is 'ID поля';
-comment on column payment_detail.field_value is 'Значение поля (сами данные)';
+comment on table payment_detail is 'Р”РµС‚Р°Р»Рё РїР»Р°С‚РµР¶Р°';
+comment on column payment_detail.payment_id is 'ID РїР»Р°С‚РµР¶Р°';
+comment on column payment_detail.field_id is 'ID РїРѕР»СЏ';
+comment on column payment_detail.field_value is 'Р—РЅР°С‡РµРЅРёРµ РїРѕР»СЏ (СЃР°РјРё РґР°РЅРЅС‹Рµ)';
 
 alter table payment_detail add constraint payment_detail_pk primary key (payment_id, field_id);
 alter table payment_detail add constraint payment_detail_payment_fk foreign key (payment_id) references payment (payment_id);
@@ -185,7 +185,6 @@ alter table payment_detail add constraint payment_detail_field_fk foreign key (f
 
 create index payment_detail_field_i on payment_detail(field_id);
 
---------- Последовательности ----------------------
+--------- РџРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё ----------------------
 create sequence client_seq;
 create sequence payment_seq;
-
