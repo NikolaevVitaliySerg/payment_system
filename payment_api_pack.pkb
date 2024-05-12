@@ -1,6 +1,6 @@
 create or replace package body payment_api_pack is  
 
-    g_is_api boolean := false; -- признак выполняется ли изменения через API
+    g_is_api boolean := false; -- РїСЂРёР·РЅР°Рє РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ Р»Рё РёР·РјРµРЅРµРЅРёСЏ С‡РµСЂРµР· API
     
     procedure allow_changes is
     begin
@@ -12,7 +12,7 @@ create or replace package body payment_api_pack is
         g_is_api := false;
     end;
     
-    -- Создание платежа
+    -- РЎРѕР·РґР°РЅРёРµ РїР»Р°С‚РµР¶Р°
     function create_payment (p_payment_detail t_payment_detail_array
                                               ,p_summa payment.summa%type
                                               ,p_currency_id payment.currency_id%type
@@ -42,7 +42,7 @@ create or replace package body payment_api_pack is
         
         allow_changes();
         
-        -- Создание платежа
+        -- РЎРѕР·РґР°РЅРёРµ РїР»Р°С‚РµР¶Р°
         insert into payment (payment_id
                             ,create_dtime
                             ,summa
@@ -54,7 +54,7 @@ create or replace package body payment_api_pack is
         values (payment_seq.nextval, p_create_dtime, p_summa, p_currency_id, p_from_client_id, p_to_client_id, c_payment_created, null)
         returning payment_id into v_payment_id;
 
-        -- Добавление деталей платежа
+        -- Р”РѕР±Р°РІР»РµРЅРёРµ РґРµС‚Р°Р»РµР№ РїР»Р°С‚РµР¶Р°
         payment_detail_api_pack.insert_or_update_payment_detail(v_payment_id, p_payment_detail); 
         
         disallow_changes();
@@ -66,7 +66,7 @@ create or replace package body payment_api_pack is
             raise;
     end;
     
-    -- Сброс платежа
+    -- РЎР±СЂРѕСЃ РїР»Р°С‚РµР¶Р°
     procedure fail_payment (p_payment_id payment.payment_id%type
                                              ,p_reason payment.status_change_reason%type)
     is
@@ -83,7 +83,7 @@ create or replace package body payment_api_pack is
 
         allow_changes();
         
-        -- Сброс платежа в ошибочный статус
+        -- РЎР±СЂРѕСЃ РїР»Р°С‚РµР¶Р° РІ РѕС€РёР±РѕС‡РЅС‹Р№ СЃС‚Р°С‚СѓСЃ
         update payment p
             set p.status = c_error_posting_payment
                 ,p.status_change_reason = p_reason
@@ -98,7 +98,7 @@ create or replace package body payment_api_pack is
             raise;
     end;
     
-    -- Отмена платежа
+    -- РћС‚РјРµРЅР° РїР»Р°С‚РµР¶Р°
     procedure cancel_payment (p_payment_id payment.payment_id%type
                                                 ,p_reason payment.status_change_reason%type)
     is
@@ -115,7 +115,7 @@ create or replace package body payment_api_pack is
         
         allow_changes();
         
-         -- Отмена платежа
+         -- РћС‚РјРµРЅР° РїР»Р°С‚РµР¶Р°
         update payment p
             set p.status = c_payment_cancel
                 ,p.status_change_reason = p_reason
@@ -130,7 +130,7 @@ create or replace package body payment_api_pack is
             raise;
     end;
     
-    -- Успешное завершение платежа
+    -- РЈСЃРїРµС€РЅРѕРµ Р·Р°РІРµСЂС€РµРЅРёРµ РїР»Р°С‚РµР¶Р°
     procedure successful_finish_payment (p_payment_id payment.payment_id%type)
     is 
     begin
@@ -142,7 +142,7 @@ create or replace package body payment_api_pack is
 
         allow_changes();
         
-        -- Завершение платежа
+        -- Р—Р°РІРµСЂС€РµРЅРёРµ РїР»Р°С‚РµР¶Р°
         update payment p
             set p.status = c_payment_posting
             where payment_id = p_payment_id
@@ -176,7 +176,7 @@ create or replace package body payment_api_pack is
     is
     v_status payment.status%type;
     begin
-        -- Пытаемся заблокировать платеж
+        -- РџС‹С‚Р°РµРјСЃСЏ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°С‚СЊ РїР»Р°С‚РµР¶
          select status 
           into v_status
            from payment t 
@@ -184,13 +184,13 @@ create or replace package body payment_api_pack is
           for update nowait;
         
         if v_status != c_payment_created then
-          -- Платеж уже в финальном статусе. С ним нельзя работать
+          -- РџР»Р°С‚РµР¶ СѓР¶Рµ РІ С„РёРЅР°Р»СЊРЅРѕРј СЃС‚Р°С‚СѓСЃРµ. РЎ РЅРёРј РЅРµР»СЊР·СЏ СЂР°Р±РѕС‚Р°С‚СЊ
           raise_application_error(common_pack.c_error_code_last_status_object, common_pack.c_error_msg_last_status_object);
         end if;
     exception
-        when no_data_found then -- такой платеж вообще не найден
+        when no_data_found then -- С‚Р°РєРѕР№ РїР»Р°С‚РµР¶ РІРѕРѕР±С‰Рµ РЅРµ РЅР°Р№РґРµРЅ
             raise_application_error(common_pack.c_error_code_object_notfound, common_pack.c_error_msg_object_notfound); 
-        when common_pack.e_row_locked then -- объект не удалось заблокировать
+        when common_pack.e_row_locked then -- РѕР±СЉРµРєС‚ РЅРµ СѓРґР°Р»РѕСЃСЊ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°С‚СЊ
             raise_application_error(common_pack.c_error_code_object_already_locked, common_pack.c_error_msg_object_already_locked);
   end;
 end;
