@@ -32,7 +32,6 @@ comment on column client.create_dtime_tech is 'Техническое поле. 
 comment on column client.update_dtime_tech is 'Техническое поле. Дата обновления записи';
 
 alter table client add constraint client_pk primary key (client_id);
-
 alter table client add constraint client_active_chk check (is_active in (0, 1));
 alter table client add constraint client_blocked_chk check (is_blocked in (0, 1));
 alter table client add constraint client_block_reason_chk check ((is_blocked = 1 and blocked_reason is not null) or (is_blocked = 0));
