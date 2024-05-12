@@ -1,9 +1,9 @@
--- Проверка "Создание платежа"
+-- РџСЂРѕРІРµСЂРєР° "РЎРѕР·РґР°РЅРёРµ РїР»Р°С‚РµР¶Р°"
 declare
     v_payment_detail t_payment_detail_array := t_payment_detail_array(t_payment_detail(1, 'Apple pay'),    
                                                                       t_payment_detail(2, '192.158.1.38'),
-                                                                      t_payment_detail(3, 'З/п'),
-                                                                      t_payment_detail(4, 'Нет'));
+                                                                      t_payment_detail(3, 'Р—/Рї'),
+                                                                      t_payment_detail(4, 'РќРµС‚'));
     v_payment_id payment.payment_id%type;
     v_summa payment.summa%type := 100;
     v_currency_id payment.currency_id%type := 840;
@@ -20,19 +20,19 @@ begin
     from payment pl 
     where pl.payment_id = v_payment_id;
   
-     -- Проверка работы триггера
+     -- РџСЂРѕРІРµСЂРєР° СЂР°Р±РѕС‚С‹ С‚СЂРёРіРіРµСЂР°
      if v_create_dtime_tech != v_update_dtime_tech then
-        raise_application_error(-20998, 'Технические даты разные!');
+        raise_application_error(-20998, 'РўРµС…РЅРёС‡РµСЃРєРёРµ РґР°С‚С‹ СЂР°Р·РЅС‹Рµ!');
      end if;
      
      commit;
 end;
 /
 
--- Проверка "Сброс платежа"
+-- РџСЂРѕРІРµСЂРєР° "РЎР±СЂРѕСЃ РїР»Р°С‚РµР¶Р°"
 declare 
     v_payment_id payment.payment_id%type := 102;
-    v_reason payment.status_change_reason%type := 'Недостаточно средств';
+    v_reason payment.status_change_reason%type := 'РќРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ СЃСЂРµРґСЃС‚РІ';
     v_create_dtime_tech payment.create_dtime_tech%type;
     v_update_dtime_tech payment.update_dtime_tech%type;  
 begin
@@ -43,23 +43,23 @@ begin
     from payment pl 
     where pl.payment_id = v_payment_id;
   
-     -- Проверка работы триггера
+     -- РџСЂРѕРІРµСЂРєР° СЂР°Р±РѕС‚С‹ С‚СЂРёРіРіРµСЂР°
      if v_create_dtime_tech = v_update_dtime_tech then
-        raise_application_error(-20998, 'Технические даты равны!');
+        raise_application_error(-20998, 'РўРµС…РЅРёС‡РµСЃРєРёРµ РґР°С‚С‹ СЂР°РІРЅС‹!');
      end if;
 end;
 /
 
--- Проверка "Отмена платежа"
+-- РџСЂРѕРІРµСЂРєР° "РћС‚РјРµРЅР° РїР»Р°С‚РµР¶Р°"
 declare 
     v_payment_id payment.payment_id%type := 101;
-    v_reason payment.status_change_reason%type := 'Ошибка пользователя';
+    v_reason payment.status_change_reason%type := 'РћС€РёР±РєР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ';
 begin
     payment_api_pack.cancel_payment(v_payment_id, v_reason);
 end;
 /
 
--- Проверка "Успешное завершение платежа"
+-- РџСЂРѕРІРµСЂРєР° "РЈСЃРїРµС€РЅРѕРµ Р·Р°РІРµСЂС€РµРЅРёРµ РїР»Р°С‚РµР¶Р°"
 declare 
     v_payment_id payment.payment_id%type := 83;
 begin
@@ -67,7 +67,7 @@ begin
 end;
 /
 
--- Проверка "Добавление/обновление данных платежа"
+-- РџСЂРѕРІРµСЂРєР° "Р”РѕР±Р°РІР»РµРЅРёРµ/РѕР±РЅРѕРІР»РµРЅРёРµ РґР°РЅРЅС‹С… РїР»Р°С‚РµР¶Р°"
 declare 
     v_payment_id payment.payment_id%type := 83;
     v_payment_detail t_payment_detail_array := t_payment_detail_array(t_payment_detail(4, 'Not'));   
@@ -76,7 +76,7 @@ begin
 end;
 /
 
--- Проверка "Удаление деталей платежа"
+-- РџСЂРѕРІРµСЂРєР° "РЈРґР°Р»РµРЅРёРµ РґРµС‚Р°Р»РµР№ РїР»Р°С‚РµР¶Р°"
 declare 
     v_payment_id payment.payment_id%type := 83;
     v_delete_payment_detail t_number_array := t_number_array(1, 2, 3);
@@ -85,7 +85,7 @@ begin
 end;
 /
 
--- Проверка функционала по глобальному разрешению. Операция удаления платежа
+-- РџСЂРѕРІРµСЂРєР° С„СѓРЅРєС†РёРѕРЅР°Р»Р° РїРѕ РіР»РѕР±Р°Р»СЊРЅРѕРјСѓ СЂР°Р·СЂРµС€РµРЅРёСЋ. РћРїРµСЂР°С†РёСЏ СѓРґР°Р»РµРЅРёСЏ РїР»Р°С‚РµР¶Р°
 declare
   v_payment_id   payment.payment_id%type := -1;
 begin
@@ -102,7 +102,7 @@ exception
 end;
 /
 
--- Проверка функционала по глобальному разрешению. Операция изменения платежа
+-- РџСЂРѕРІРµСЂРєР° С„СѓРЅРєС†РёРѕРЅР°Р»Р° РїРѕ РіР»РѕР±Р°Р»СЊРЅРѕРјСѓ СЂР°Р·СЂРµС€РµРЅРёСЋ. РћРїРµСЂР°С†РёСЏ РёР·РјРµРЅРµРЅРёСЏ РїР»Р°С‚РµР¶Р°
 declare
   v_payment_id   payment.payment_id%type := -1;
 begin
@@ -121,7 +121,7 @@ exception
 end;
 /
 
--- Проверка функционала по глобальному разрешению. Операция изменения данных платежа
+-- РџСЂРѕРІРµСЂРєР° С„СѓРЅРєС†РёРѕРЅР°Р»Р° РїРѕ РіР»РѕР±Р°Р»СЊРЅРѕРјСѓ СЂР°Р·СЂРµС€РµРЅРёСЋ. РћРїРµСЂР°С†РёСЏ РёР·РјРµРЅРµРЅРёСЏ РґР°РЅРЅС‹С… РїР»Р°С‚РµР¶Р°
 declare
   v_payment_id   payment.payment_id%type := -1;
 begin
@@ -141,8 +141,8 @@ exception
 end;
 /
 
--- Негативные Unit-тесты
--- Проверка "Создание платежа"
+-- РќРµРіР°С‚РёРІРЅС‹Рµ Unit-С‚РµСЃС‚С‹
+-- РџСЂРѕРІРµСЂРєР° "РЎРѕР·РґР°РЅРёРµ РїР»Р°С‚РµР¶Р°"
 declare
     v_payment_detail t_payment_detail_array;
     v_payment_id payment.payment_id%type;
@@ -152,117 +152,117 @@ declare
     v_to_client_id payment.to_client_id%type := 1;
 begin
     v_payment_id := payment_api_pack.create_payment(v_payment_detail, v_summa, v_currency_id, v_from_client_id, v_to_client_id);
-    raise_application_error(-20999, 'Unit тест или API выполнены не верно');
+    raise_application_error(-20999, 'Unit С‚РµСЃС‚ РёР»Рё API РІС‹РїРѕР»РЅРµРЅС‹ РЅРµ РІРµСЂРЅРѕ');
 exception 
     when common_pack.e_invalid_input_parameter then
-        dbms_output.put_line('API Платеж. Создание платежа. Исключение возбуждено успешно. Ошибка: ' || sqlerrm);
+        dbms_output.put_line('API РџР»Р°С‚РµР¶. РЎРѕР·РґР°РЅРёРµ РїР»Р°С‚РµР¶Р°. РСЃРєР»СЋС‡РµРЅРёРµ РІРѕР·Р±СѓР¶РґРµРЅРѕ СѓСЃРїРµС€РЅРѕ. РћС€РёР±РєР°: ' || sqlerrm);
 end;
 /
 
--- Проверка "Сброс платежа"
+-- РџСЂРѕРІРµСЂРєР° "РЎР±СЂРѕСЃ РїР»Р°С‚РµР¶Р°"
 declare 
     v_payment_id payment.payment_id%type;
-    v_reason payment.status_change_reason%type := 'Недостаточно средств';
+    v_reason payment.status_change_reason%type := 'РќРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ СЃСЂРµРґСЃС‚РІ';
 begin
     payment_api_pack.fail_payment(v_payment_id, v_reason);
-    raise_application_error(-20999, 'Unit тест или API выполнены не верно');
+    raise_application_error(-20999, 'Unit С‚РµСЃС‚ РёР»Рё API РІС‹РїРѕР»РЅРµРЅС‹ РЅРµ РІРµСЂРЅРѕ');
 exception
      when common_pack.e_invalid_input_parameter then
-        dbms_output.put_line('API Платеж. Сброс платежа. Исключение возбуждено успешно. Ошибка: ' || sqlerrm);
+        dbms_output.put_line('API РџР»Р°С‚РµР¶. РЎР±СЂРѕСЃ РїР»Р°С‚РµР¶Р°. РСЃРєР»СЋС‡РµРЅРёРµ РІРѕР·Р±СѓР¶РґРµРЅРѕ СѓСЃРїРµС€РЅРѕ. РћС€РёР±РєР°: ' || sqlerrm);
 end;
 /
 
--- Проверка "Отмена платежа"
+-- РџСЂРѕРІРµСЂРєР° "РћС‚РјРµРЅР° РїР»Р°С‚РµР¶Р°"
 declare 
     v_payment_id payment.payment_id%type := 83;
     v_reason payment.status_change_reason%type;
 begin
     payment_api_pack.cancel_payment(v_payment_id, v_reason);
-    raise_application_error(-20999, 'Unit тест или API выполнены не верно');
+    raise_application_error(-20999, 'Unit С‚РµСЃС‚ РёР»Рё API РІС‹РїРѕР»РЅРµРЅС‹ РЅРµ РІРµСЂРЅРѕ');
 exception
      when common_pack.e_invalid_input_parameter then
-        dbms_output.put_line('API Платеж. Отмена платежа. Исключение возбуждено успешно. Ошибка: ' || sqlerrm);
+        dbms_output.put_line('API РџР»Р°С‚РµР¶. РћС‚РјРµРЅР° РїР»Р°С‚РµР¶Р°. РСЃРєР»СЋС‡РµРЅРёРµ РІРѕР·Р±СѓР¶РґРµРЅРѕ СѓСЃРїРµС€РЅРѕ. РћС€РёР±РєР°: ' || sqlerrm);
 end;
 /
 
--- Проверка "Успешное завершение платежа"
+-- РџСЂРѕРІРµСЂРєР° "РЈСЃРїРµС€РЅРѕРµ Р·Р°РІРµСЂС€РµРЅРёРµ РїР»Р°С‚РµР¶Р°"
 declare 
     v_payment_id payment.payment_id%type;
 begin
     payment_api_pack.successful_finish_payment(v_payment_id);
-    raise_application_error(-20999, 'Unit тест или API выполнены не верно');
+    raise_application_error(-20999, 'Unit С‚РµСЃС‚ РёР»Рё API РІС‹РїРѕР»РЅРµРЅС‹ РЅРµ РІРµСЂРЅРѕ');
 exception
      when common_pack.e_invalid_input_parameter then
-        dbms_output.put_line('API Платеж. Успешное завершение платежа. Исключение возбуждено успешно. Ошибка: ' || sqlerrm);
+        dbms_output.put_line('API РџР»Р°С‚РµР¶. РЈСЃРїРµС€РЅРѕРµ Р·Р°РІРµСЂС€РµРЅРёРµ РїР»Р°С‚РµР¶Р°. РСЃРєР»СЋС‡РµРЅРёРµ РІРѕР·Р±СѓР¶РґРµРЅРѕ СѓСЃРїРµС€РЅРѕ. РћС€РёР±РєР°: ' || sqlerrm);
 end;
 /
 
--- Проверка "Добавление/обновление данных платежа"
+-- РџСЂРѕРІРµСЂРєР° "Р”РѕР±Р°РІР»РµРЅРёРµ/РѕР±РЅРѕРІР»РµРЅРёРµ РґР°РЅРЅС‹С… РїР»Р°С‚РµР¶Р°"
 declare 
     v_payment_id payment.payment_id%type;
     v_payment_detail t_payment_detail_array;   
 begin
     payment_detail_api_pack.insert_or_update_payment_detail(v_payment_id, v_payment_detail);
-    raise_application_error(-20999, 'Unit тест или API выполнены не верно');
+    raise_application_error(-20999, 'Unit С‚РµСЃС‚ РёР»Рё API РІС‹РїРѕР»РЅРµРЅС‹ РЅРµ РІРµСЂРЅРѕ');
 exception
      when common_pack.e_invalid_input_parameter then
-        dbms_output.put_line('API Детали платежа. Добавление/обновление данных платежа. Исключение возбуждено успешно. Ошибка: ' || sqlerrm);
+        dbms_output.put_line('API Р”РµС‚Р°Р»Рё РїР»Р°С‚РµР¶Р°. Р”РѕР±Р°РІР»РµРЅРёРµ/РѕР±РЅРѕРІР»РµРЅРёРµ РґР°РЅРЅС‹С… РїР»Р°С‚РµР¶Р°. РСЃРєР»СЋС‡РµРЅРёРµ РІРѕР·Р±СѓР¶РґРµРЅРѕ СѓСЃРїРµС€РЅРѕ. РћС€РёР±РєР°: ' || sqlerrm);
 end;
 /
 
--- Проверка "Удаление деталей платежа" Тест_1
+-- РџСЂРѕРІРµСЂРєР° "РЈРґР°Р»РµРЅРёРµ РґРµС‚Р°Р»РµР№ РїР»Р°С‚РµР¶Р°" РўРµСЃС‚_1
 declare 
     v_payment_id payment.payment_id%type;
     v_delete_payment_detail t_number_array := t_number_array(1, 2, 3);
 begin
     payment_detail_api_pack.delete_payment_detail(v_payment_id, v_delete_payment_detail);
-    raise_application_error(-20999, 'Unit тест или API выполнены не верно');
+    raise_application_error(-20999, 'Unit С‚РµСЃС‚ РёР»Рё API РІС‹РїРѕР»РЅРµРЅС‹ РЅРµ РІРµСЂРЅРѕ');
 exception
      when common_pack.e_invalid_input_parameter then
-        dbms_output.put_line('API Детали платежа. Удаление деталей платежа. Исключение возбуждено успешно. Ошибка: ' || sqlerrm);
+        dbms_output.put_line('API Р”РµС‚Р°Р»Рё РїР»Р°С‚РµР¶Р°. РЈРґР°Р»РµРЅРёРµ РґРµС‚Р°Р»РµР№ РїР»Р°С‚РµР¶Р°. РСЃРєР»СЋС‡РµРЅРёРµ РІРѕР·Р±СѓР¶РґРµРЅРѕ СѓСЃРїРµС€РЅРѕ. РћС€РёР±РєР°: ' || sqlerrm);
 end;
 /
 
--- Проверка "Удаление деталей платежа" Тест_2
+-- РџСЂРѕРІРµСЂРєР° "РЈРґР°Р»РµРЅРёРµ РґРµС‚Р°Р»РµР№ РїР»Р°С‚РµР¶Р°" РўРµСЃС‚_2
 declare 
     v_payment_id payment.payment_id%type := 83;
     v_delete_payment_detail t_number_array := t_number_array();
 begin
     payment_detail_api_pack.delete_payment_detail(v_payment_id, v_delete_payment_detail);
-    raise_application_error(-20999, 'Unit тест или API выполнены не верно');
+    raise_application_error(-20999, 'Unit С‚РµСЃС‚ РёР»Рё API РІС‹РїРѕР»РЅРµРЅС‹ РЅРµ РІРµСЂРЅРѕ');
 exception
      when common_pack.e_invalid_input_parameter then
-        dbms_output.put_line('API Детали платежа. Удаление деталей платежа. Исключение возбуждено успешно. Ошибка: ' || sqlerrm);
+        dbms_output.put_line('API Р”РµС‚Р°Р»Рё РїР»Р°С‚РµР¶Р°. РЈРґР°Р»РµРЅРёРµ РґРµС‚Р°Р»РµР№ РїР»Р°С‚РµР¶Р°. РСЃРєР»СЋС‡РµРЅРёРµ РІРѕР·Р±СѓР¶РґРµРЅРѕ СѓСЃРїРµС€РЅРѕ. РћС€РёР±РєР°: ' || sqlerrm);
 end;
 /
 
--- Проверка "Удаление деталей платежа" Тест_3
+-- РџСЂРѕРІРµСЂРєР° "РЈРґР°Р»РµРЅРёРµ РґРµС‚Р°Р»РµР№ РїР»Р°С‚РµР¶Р°" РўРµСЃС‚_3
 declare 
     v_payment_id payment.payment_id%type := 83;
     v_delete_payment_detail t_number_array;
 begin
     payment_detail_api_pack.delete_payment_detail(v_payment_id, v_delete_payment_detail);
-    raise_application_error(-20999, 'Unit тест или API выполнены не верно');
+    raise_application_error(-20999, 'Unit С‚РµСЃС‚ РёР»Рё API РІС‹РїРѕР»РЅРµРЅС‹ РЅРµ РІРµСЂРЅРѕ');
 exception
      when common_pack.e_invalid_input_parameter then
-        dbms_output.put_line('API Детали платежа. Удаление деталей платежа. Исключение возбуждено успешно. Ошибка: ' || sqlerrm);
+        dbms_output.put_line('API Р”РµС‚Р°Р»Рё РїР»Р°С‚РµР¶Р°. РЈРґР°Р»РµРЅРёРµ РґРµС‚Р°Р»РµР№ РїР»Р°С‚РµР¶Р°. РСЃРєР»СЋС‡РµРЅРёРµ РІРѕР·Р±СѓР¶РґРµРЅРѕ СѓСЃРїРµС€РЅРѕ. РћС€РёР±РєР°: ' || sqlerrm);
 end;
 /
 
--- Негативные тесты (триггеры)
--- Проверка запрета удаления payment через не через API
+-- РќРµРіР°С‚РёРІРЅС‹Рµ С‚РµСЃС‚С‹ (С‚СЂРёРіРіРµСЂС‹)
+-- РџСЂРѕРІРµСЂРєР° Р·Р°РїСЂРµС‚Р° СѓРґР°Р»РµРЅРёСЏ payment С‡РµСЂРµР· РЅРµ С‡РµСЂРµР· API
 declare
   v_payment_id payment.payment_id%type := 1000;
 begin
   delete from payment p1 where p1.payment_id = v_payment_id;
-  raise_application_error(-20999, 'Unit-тест или API выполнены не верно');  
+  raise_application_error(-20999, 'Unit-С‚РµСЃС‚ РёР»Рё API РІС‹РїРѕР»РЅРµРЅС‹ РЅРµ РІРµСЂРЅРѕ');  
 exception
   when common_pack.e_delete_forbidden then
-    dbms_output.put_line('Удаление платежа. Исключение возбуждено успешно. Ошибка: '|| sqlerrm); 
+    dbms_output.put_line('РЈРґР°Р»РµРЅРёРµ РїР»Р°С‚РµР¶Р°. РСЃРєР»СЋС‡РµРЅРёРµ РІРѕР·Р±СѓР¶РґРµРЅРѕ СѓСЃРїРµС€РЅРѕ. РћС€РёР±РєР°: '|| sqlerrm); 
 end;
 /
 
--- Проверка запрета вставки в payment не через API
+-- РџСЂРѕРІРµСЂРєР° Р·Р°РїСЂРµС‚Р° РІСЃС‚Р°РІРєРё РІ payment РЅРµ С‡РµСЂРµР· API
 declare
     v_payment_id   payment.payment_id%type := 1000;
     v_summa payment.summa%type := 100;
@@ -280,14 +280,14 @@ begin
                         ,status_change_reason)
         values (v_payment_id, systimestamp, v_summa, v_currency_id, v_from_client_id, v_to_client_id, 1, null);
 
-  raise_application_error(-20999, 'Unit-тест или API выполнены не верно');  
+  raise_application_error(-20999, 'Unit-С‚РµСЃС‚ РёР»Рё API РІС‹РїРѕР»РЅРµРЅС‹ РЅРµ РІРµСЂРЅРѕ');  
 exception
   when common_pack.e_manual_changes then
-    dbms_output.put_line('Вставка в таблицу payment не через API. Исключение возбуждено успешно. Ошибка: '|| sqlerrm); 
+    dbms_output.put_line('Р’СЃС‚Р°РІРєР° РІ С‚Р°Р±Р»РёС†Сѓ payment РЅРµ С‡РµСЂРµР· API. РСЃРєР»СЋС‡РµРЅРёРµ РІРѕР·Р±СѓР¶РґРµРЅРѕ СѓСЃРїРµС€РЅРѕ. РћС€РёР±РєР°: '|| sqlerrm); 
 end;
 /
 
--- Проверка запрета обновления в payment не через API
+-- РџСЂРѕРІРµСЂРєР° Р·Р°РїСЂРµС‚Р° РѕР±РЅРѕРІР»РµРЅРёСЏ РІ payment РЅРµ С‡РµСЂРµР· API
 declare
   v_payment_id   payment.payment_id%type := 1000;
 begin
@@ -295,14 +295,14 @@ begin
             set p.status = 2
             where payment_id = v_payment_id;
 
-  raise_application_error(-20999, 'Unit-тест или API выполнены не верно');  
+  raise_application_error(-20999, 'Unit-С‚РµСЃС‚ РёР»Рё API РІС‹РїРѕР»РЅРµРЅС‹ РЅРµ РІРµСЂРЅРѕ');  
 exception
   when common_pack.e_manual_changes then
-    dbms_output.put_line('Обновление таблицы payment не через API. Исключение возбуждено успешно. Ошибка: '|| sqlerrm); 
+    dbms_output.put_line('РћР±РЅРѕРІР»РµРЅРёРµ С‚Р°Р±Р»РёС†С‹ payment РЅРµ С‡РµСЂРµР· API. РСЃРєР»СЋС‡РµРЅРёРµ РІРѕР·Р±СѓР¶РґРµРЅРѕ СѓСЃРїРµС€РЅРѕ. РћС€РёР±РєР°: '|| sqlerrm); 
 end;
 /
 
--- Вставка не через API - данных платежа
+-- Р’СЃС‚Р°РІРєР° РЅРµ С‡РµСЂРµР· API - РґР°РЅРЅС‹С… РїР»Р°С‚РµР¶Р°
 declare
   v_payment_id   payment_detail.payment_id%type := 1000;
   v_field_id    payment_detail.field_id%type := 1000;
@@ -315,14 +315,14 @@ begin
     ,v_field_id
     ,null);
   
-	raise_application_error(-20999, 'Unit-тест или API выполнены не верно');		
+	raise_application_error(-20999, 'Unit-С‚РµСЃС‚ РёР»Рё API РІС‹РїРѕР»РЅРµРЅС‹ РЅРµ РІРµСЂРЅРѕ');		
 exception
   when common_pack.e_manual_changes then
-    dbms_output.put_line('Вставка в таблицу payment_detail не через API. Исключение возбуждено успешно. Ошибка: '|| sqlerrm); 
+    dbms_output.put_line('Р’СЃС‚Р°РІРєР° РІ С‚Р°Р±Р»РёС†Сѓ payment_detail РЅРµ С‡РµСЂРµР· API. РСЃРєР»СЋС‡РµРЅРёРµ РІРѕР·Р±СѓР¶РґРµРЅРѕ СѓСЃРїРµС€РЅРѕ. РћС€РёР±РєР°: '|| sqlerrm); 
 end;
 /
 
--- Изменение не через API (обновление) - данных платежа
+-- РР·РјРµРЅРµРЅРёРµ РЅРµ С‡РµСЂРµР· API (РѕР±РЅРѕРІР»РµРЅРёРµ) - РґР°РЅРЅС‹С… РїР»Р°С‚РµР¶Р°
 declare
   v_payment_id   payment_detail.payment_id%type := 1000;
 begin
@@ -330,36 +330,36 @@ begin
      set p1.field_value = p1.field_value
    where p1.payment_id = v_payment_id;
   
-	raise_application_error(-20999, 'Unit-тест или API выполнены не верно');	 
+	raise_application_error(-20999, 'Unit-С‚РµСЃС‚ РёР»Рё API РІС‹РїРѕР»РЅРµРЅС‹ РЅРµ РІРµСЂРЅРѕ');	 
 exception
   when common_pack.e_manual_changes then
-    dbms_output.put_line('Обновление таблицы payment_detail не через API. Исключение возбуждено успешно. Ошибка: '|| sqlerrm); 
+    dbms_output.put_line('РћР±РЅРѕРІР»РµРЅРёРµ С‚Р°Р±Р»РёС†С‹ payment_detail РЅРµ С‡РµСЂРµР· API. РСЃРєР»СЋС‡РµРЅРёРµ РІРѕР·Р±СѓР¶РґРµРЅРѕ СѓСЃРїРµС€РЅРѕ. РћС€РёР±РєР°: '|| sqlerrm); 
 end;
 /
 
--- Удаление не через API (обновление) - данных платежа
+-- РЈРґР°Р»РµРЅРёРµ РЅРµ С‡РµСЂРµР· API (РѕР±РЅРѕРІР»РµРЅРёРµ) - РґР°РЅРЅС‹С… РїР»Р°С‚РµР¶Р°
 declare
   v_payment_id   payment_detail.payment_id%type := 1000;
 begin
   delete payment_detail p1     
    where p1.payment_id = v_payment_id;
   
-	raise_application_error(-20999, 'Unit-тест или API выполнены не верно');	 
+	raise_application_error(-20999, 'Unit-С‚РµСЃС‚ РёР»Рё API РІС‹РїРѕР»РЅРµРЅС‹ РЅРµ РІРµСЂРЅРѕ');	 
 exception
   when common_pack.e_manual_changes then
-    dbms_output.put_line('Удаление из таблицы payment_detail не через API. Исключение возбуждено успешно. Ошибка: '|| sqlerrm); 
+    dbms_output.put_line('РЈРґР°Р»РµРЅРёРµ РёР· С‚Р°Р±Р»РёС†С‹ payment_detail РЅРµ С‡РµСЂРµР· API. РСЃРєР»СЋС‡РµРЅРёРµ РІРѕР·Р±СѓР¶РґРµРЅРѕ СѓСЃРїРµС€РЅРѕ. РћС€РёР±РєР°: '|| sqlerrm); 
 end;
 /
 
--- Негативный тест на отсутствие платежа
+-- РќРµРіР°С‚РёРІРЅС‹Р№ С‚РµСЃС‚ РЅР° РѕС‚СЃСѓС‚СЃС‚РІРёРµ РїР»Р°С‚РµР¶Р°
 declare
   v_payment_id payment.payment_id%type := -777;
-  v_reason    payment.status_change_reason%type := 'Тестовая причина';
+  v_reason    payment.status_change_reason%type := 'РўРµСЃС‚РѕРІР°СЏ РїСЂРёС‡РёРЅР°';
 begin
   payment_api_pack.fail_payment(v_payment_id, v_reason);
-  raise_application_error(-20999, 'Unit-тест или API выполнены не верно');	 
+  raise_application_error(-20999, 'Unit-С‚РµСЃС‚ РёР»Рё API РІС‹РїРѕР»РЅРµРЅС‹ РЅРµ РІРµСЂРЅРѕ');	 
 exception
   when common_pack.e_object_notfound then 
-    dbms_output.put_line('Объект не найден. Исключение возбуждено успешно. Ошибка: '|| sqlerrm); 
+    dbms_output.put_line('РћР±СЉРµРєС‚ РЅРµ РЅР°Р№РґРµРЅ. РСЃРєР»СЋС‡РµРЅРёРµ РІРѕР·Р±СѓР¶РґРµРЅРѕ СѓСЃРїРµС€РЅРѕ. РћС€РёР±РєР°: '|| sqlerrm); 
 end;
 /
